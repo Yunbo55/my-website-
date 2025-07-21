@@ -1,222 +1,164 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>대전시내지국 검색</title>
-<style>
-    * {
-        margin: 0; padding: 0; box-sizing: border-box;
-    }
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-    }
-    .container {
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 500px;
-        text-align: center;
-    }
-    h1 {
-        color: #333;
-        margin-bottom: 30px;
-        font-size: 28px;
-        font-weight: bold;
-    }
-    .search-box {
-        margin-bottom: 30px;
-    }
-    input[type="text"] {
-        width: 100%;
-        padding: 15px 20px;
-        font-size: 16px;
-        border: 2px solid #e0e0e0;
-        border-radius: 25px;
-        outline: none;
-        transition: all 0.3s ease;
-    }
-    input[type="text"]:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-    }
-    button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 15px 30px;
-        font-size: 16px;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-        margin-top: 15px;
-    }
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    .result {
-        margin-top: 30px;
-        padding: 20px;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 0.3s ease;
-    }
-    .result.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    .result.success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .result.error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    .examples {
-        margin-top: 20px;
-        font-size: 14px;
-        color: #666;
-    }
-    .examples strong {
-        color: #333;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대전시내지국 검색</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        #result.success {
+            color: green;
+        }
+        #result.error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1>🏠 대전시내지국 검색</h1>
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="동네명을 입력하세요 (예: 선화동, 둔산동)" />
+    <div class="container">
+        <h1>대전시내지국 검색</h1>
+        <input type="text" id="searchInput" placeholder="동네명 입력 (예: 구봉)">
         <button onclick="searchRegion()">검색</button>
+        <div id="result"></div>
     </div>
-    <div id="result" class="result"></div>
-    <div class="examples">
-        <strong>검색 예시:</strong><br />
-        선화동, 대흥1동, 둔산동, 갈마동, 판암동, 유성, 현대, 주공 등
-    </div>
-</div>
 
-<script>
-const regionData = {
-    "선화": "선화동,목동,중촌동,은행동 일부,중촌동",
-    "대흥": "대흥1동,대흥2동,대흥3동 일부,대사동,부사동,문창동,석교동,중구청",
-    "태평": "태평동,오류동,유천동,(현대@)",
-    "문화": "문화동",
-    "산성": "유천동,산성동,사정동,안영동,문화동(주공@)",
-    "둔산": "둔산동,탄방동 일부",
-    "서둔산": "월평1동,월평2동,월평3동,만년동,진달래,황실,누리,다모아,상아,무궁화,백합,무지개,시영하나로,월평주공,상록수,샛별,강변,한아름,전원",
-    "남둔산": "용문동,탄방동,(한양,목련,크로바,한우리,한가람)",
-    "갈마": "갈마동,월평동",
-    "괴정": "괴정동,가장동,용문동,변동,내동",
-    "내동": "괴정동,내동,롯데,경성큰마을,탄방동,갈마동(12+70번지이상)",
-    "도마": "도마동,복수동,변동",
-    "관저": "가수원동,도안동,관저동,대자연,원앙,느리울",
-    "판암": "원동,대동,판암동,용운동,신흥동,소제동,인동",
-    "삼성": "삼성1동,삼성2동,중동,정동,원동,신안동,소제동",
-    "가오": "천동,옥계동,가오동,호동,효동,산내동,대성동,대별동,낭월동,인동",
-    "용전": "용전동,성남동,홍도동,가양동 일부,중리동",
-    "가양": "가양1동,가양2동,비래동,회덕동,자양동,가양동,(석촌@)",
-    "대덕": "오정,대화,홍도,시영,전원,읍내,대덕구청",
-    "와동": "신대,연축,와동,장동,읍내",
-    "중리": "중리동,송촌동,용전동,신동아,한국전력,법동,영진로얄,삼정하이츠,삼호",
-    "신탄진": "목상동,덕암동,석봉동,문평동,상서동,평촌동,미로동,신일동",
-    "유성": "봉명동,구암동,학하동,장대동,온천동,덕명동,원신흥동,궁동",
-    "연구단지": "신성동,도룡동,죽동,하기동,외삼동,어은동,유성구청",
-    "노은": "노은동,월드컵경기장,농산물도매시장,지족동",
-    "반석": "반석동,지족동",
-    "진잠": "관저동,(구봉@),원내동",
-    "전민": "전민동,(엑스포@),문지동,원촌동",
-    "송강": "세종시 금남면,신도시 일부",
-    "계룡": "봉산동,용산동,관평동,구즉동",
-    "금남": "계룡출장소,신도안,논산시 두마면"
-};
+    <script>
+        const regionData = {
+            "전민": "전민동,엑스포아파트,방동",
+            "진잠": "진잠,교촌,원내,도안,학하,구봉",
+            "태평": "태평동,태평,현대,삼부",
+            "서둔산": "갈마동,갈마,진달래(무지개),수미,서한,삼익,보람,청솔,은하,라이프,우성,유등,혜천,중도일보,KT,법원",
+            "남둔산": "둔산동,둔산,샘머리,크로바,남선,목련(한양,목련,크로바,한우리,한가람),한밭,경희,시청,한가람,둔산전자,목련,크로바,가람,목련@",
+            "동둔산": "둔산동,타임월드,시청역,시청지하,둔산여고,시청앞,목련,은하수,학원,롯데시네마,시티",
+            "탄방": "탄방동,탄방,새미래,유성,버드내,오룡",
+            "용문": "용문동,용문,충청,대림,성모,도마,도마동",
+            "도안": "도안동,도안,갑천,수목,도안신도시",
+            "유성온천": "온천동,유성온천,온천,충남대,충남대학교,지족,노은,죽동,장대,궁동",
+        };
 
-function searchRegion() {
-    const inputRaw = document.getElementById('searchInput').value;
-    if (!inputRaw) {
-        showResult('동네명을 입력해주세요.', 'error');
-        return;
-    }
-    const input = inputRaw.trim().replace(/\s/g, '').toLowerCase();
-
-    let found = false;
-
-    for (const [region, areas] of Object.entries(regionData)) {
-        const areaList = areas.split(',').map(a => a.trim());
-
-        for (let area of areaList) {
-            let main = area;
-            let inner = '';
-
-            if (area.includes('(') && area.includes(')')) {
-                main = area.substring(0, area.indexOf('(')).trim();
-                inner = area.substring(area.indexOf('(') + 1, area.indexOf(')')).trim();
+        function searchRegion() {
+            const inputRaw = document.getElementById('searchInput').value;
+            if (!inputRaw) {
+                showResult('동네명을 입력해주세요.', 'error');
+                return;
             }
+            const input = inputRaw.trim().replace(/\s/g, '').toLowerCase();
+            let found = false;
 
-            const mainNorm = main.replace(/\s/g, '').toLowerCase();
-            const innerNorm = inner.replace(/\s/g, '').toLowerCase();
+            for (const [region, areas] of Object.entries(regionData)) {
+                const areaList = areas.split(',').map(a => a.trim());
 
-            // 완전 일치 우선 검사
-            if (mainNorm === input) {
-                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                found = true;
-                break;
-            }
+                for (let area of areaList) {
+                    let main = area;
+                    let inner = '';
 
-            // 괄호 안 @ 처리
-            if (innerNorm.includes('@')) {
-                const base = innerNorm.replace('@', '');
-                if (input.includes(base)) {
-                    showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                    found = true;
-                    break;
+                    // 괄호가 있으면 분리
+                    if (area.includes('(') && area.includes(')')) {
+                        main = area.substring(0, area.indexOf('(')).trim();
+                        inner = area.substring(area.indexOf('(') + 1, area.indexOf(')')).trim();
+                    }
+
+                    const mainNorm = main.replace(/\s/g, '').toLowerCase();
+                    const innerNorm = inner.replace(/\s/g, '').toLowerCase();
+
+                    // 정확히 일치
+                    if (mainNorm === input) {
+                        showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                        found = true;
+                        break;
+                    }
+
+                    // 괄호 안에 @ 포함되었을 때 우선 검색
+                    if (innerNorm.includes('@')) {
+                        const base = innerNorm.replace('@', '');
+                        if (input.includes(base)) {
+                            showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // 괄호 안에 항목 여러 개일 경우
+                    if (!innerNorm.includes('@') && innerNorm.length > 0) {
+                        const innerParts = innerNorm.split(',').map(i => i.trim());
+                        if (innerParts.includes(input)) {
+                            showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // 포함 관계
+                    if (input.includes(mainNorm) || mainNorm.includes(input)) {
+                        showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                        found = true;
+                        break;
+                    }
                 }
+                if (found) break;
             }
 
-            // 포함관계 검사
-            if (input.includes(mainNorm) || mainNorm.includes(input)) {
-                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                found = true;
-                break;
+            if (!found) {
+                showResult('해당 구역을 찾을 수 없습니다.', 'error');
             }
         }
-        if (found) break;
-    }
 
-    if (!found) {
-        showResult('해당 구역을 찾을 수 없습니다.', 'error');
-    }
-}
-
-function showResult(message, type) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.textContent = message;
-    resultDiv.className = `result ${type}`;
-    setTimeout(() => {
-        resultDiv.classList.add('show');
-    }, 100);
-}
-
-document.getElementById('searchInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        searchRegion();
-    }
-});
-</script>
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = type;
+        }
+    </script>
 </body>
 </html>
