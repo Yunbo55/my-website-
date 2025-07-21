@@ -143,124 +143,114 @@
 
     <script>
         // Java 코드의 데이터를 JavaScript 객체로 변환
-        const regionData = {
-            // 대전시내지국
-            "선화": "선화동,목동,중촌동,은행동 일부,중촌동",
-            "대흥": "대흥1,2,3동 일부,대사동,부사동,문창동,석교동,중구청",
-            "태평": "태평동,오류동,유천동 일부(현대@)",
-            "문화": "문화동",
-            "산성": "유천동,산성동,사정동,안영동,문화동(주공@)",
-            "둔산/동둔산": "둔산동,탄방동 일부",
-            "서둔산": "월평1동,월평2동,월평3동,월평1,월평2,월평3동,만년동(진달래,황실,누리,다모아,상아,무궁화,백합,무지개,시영하나로,월평주공,상록수,샛별,강변,한아름,전원)",
-            "남둔산": "용문동 일부,탄방동 일부(한양,목련,크로바,한우리,한가람)",
-            "갈마": "갈마동,월평동",
-            "괴정": "괴정동 일부,가장동,용문동 일부,변동 일부,내동 일부",
-            "내동": "괴정동 일부,내동 일부(롯데,경성큰마을),탄방동 일부,갈마동 일부(12+70번지이상)",
-            "도마": "도마동,복수동,변동 일부",
-            "관저": "가수원동,도안동,관저동 일부(대자연,원앙,느리울)",
-            "판암": "원동,대동,판암동,용운동,신흥동,소제동 일부,인동 일부",
-            "삼성": "삼성1동,삼성2동,중동,정동,원동,신안동,소제동 일부",
-            "가오": "천동,옥계동,가오동,호동,효동,산내동,대성동,대별동,낭월동,인동 일부",
-            "용전": "용전동,성남동,홍도동,가양동 일부,중리동 일부",
-            "가양": "가양1동,가양2동,비래동,회덕동,자양동,가양동 일부(석촌@)",
-            "대덕/와동": "오정일부,대화,홍도일부(시영,전원Ⓐ),읍내일부,대덕구청,한남대 / 신대,연축,와동,장동,읍내일부",
-            "중리/송촌": "중리동,송촌동,용전동 일부(신동아,한국전력),법동 일부(영진로얄,삼정하이츠,삼호)",
-            "신탄진": "목상동,덕암동,석봉동,문평동,상서동,평촌동,미로동,신일동",
-            "유성": "봉명동,구암동,학하동,장대동,온천동,덕명동,원신흥동,궁동",
-            "연구단지": "신성동,도룡동,죽동,하기동,외삼동,어은동(유성구청)",
-            "노은": "노은동(월드컵경기장,농산물도매시장),지족동 일부",
-            "반석": "반석동,지족동 일부",
-            "진잠": "관저동 일부(구봉@),원내동",
-            "전민": "전민동(엑스포@).문지동.원촌동",
-            "송강": "세종시 금남면,신도시 일부", // 마지막 값으로 덮어씀
-            "계룡": "봉산동,용산동,관평동,구즉동",
-            "금남": "계룡출장소,신도안,논산시 두마면"
-        };
+       const regionData = {
+    "선화": "선화동,목동,중촌동,은행동 일부,중촌동",
+    "대흥": "대흥1동,대흥2동,대흥3동 일부,대사동,부사동,문창동,석교동,중구청",
+    "태평": "태평동,오류동,유천동 일부(현대@)",
+    "문화": "문화동",
+    "산성": "유천동,산성동,사정동,안영동,문화동(주공@)",
+    "둔산": "둔산동,탄방동 일부",
+    "서둔산": "월평1동,월평2동,월평3동,만년동,진달래,황실,누리,다모아,상아,무궁화,백합,무지개,시영하나로,월평주공,상록수,샛별,강변,한아름,전원",
+    "남둔산": "용문동 일부,탄방동 일부(한양,목련,크로바,한우리,한가람)",
+    "갈마": "갈마동,월평동",
+    "괴정": "괴정동,가장동,용문동,변동,내동",
+    "내동": "괴정동,내동,롯데,경성큰마을,탄방동 일부,갈마동(12+70번지이상)",
+    "도마": "도마동,복수동,변동 ",
+    "관저": "가수원동,도안동,관저동,대자연,원앙,느리울",
+    "판암": "원동,대동,판암동,용운동,신흥동,소제동 일부,인동 일부",
+    "삼성": "삼성1동,삼성2동,중동,정동,원동,신안동,소제동 일부",
+    "가오": "천동,옥계동,가오동,호동,효동,산내동,대성동,대별동,낭월동,인동 일부",
+    "용전": "용전동,성남동,홍도동,가양동 일부,중리동 일부",
+    "가양": "가양1동,가양2동,비래동,회덕동,자양동,가양동 일부(석촌@)",
+    "대덕": "오정 일부,대화,홍도,시영,전원,읍내 일부,대덕구청",
+    "와동": "신대,연축,와동,장동,읍내 일부",
+    "중리": "중리동,송촌동,용전동,신동아,한국전력,법동,영진로얄,삼정하이츠,삼호",
+    "신탄진": "목상동,덕암동,석봉동,문평동,상서동,평촌동,미로동,신일동",
+    "유성": "봉명동,구암동,학하동,장대동,온천동,덕명동,원신흥동,궁동",
+    "연구단지": "신성동,도룡동,죽동,하기동,외삼동,어은동,유성구청",
+    "노은": "노은동,월드컵경기장,농산물도매시장,지족동 일부",
+    "반석": "반석동,지족동",
+    "진잠": "관저동 일부(구봉@),원내동",
+    "전민": "전민동(엑스포@),문지동,원촌동",
+    "송강": "세종시 금남면,신도시 일부",
+    "계룡": "봉산동,용산동,관평동,구즉동",
+    "금남": "계룡출장소,신도안,논산시 두마면"
+};
 
-        function searchRegion() {
-            const input = document.getElementById('searchInput').value.trim();
-            const resultDiv = document.getElementById('result');
-            
-            if (!input) {
-                showResult('동네명을 입력해주세요.', 'error');
-                return;
+function searchRegion() {
+    const inputRaw = document.getElementById('searchInput').value.trim();
+    const input = inputRaw.replace(/\s/g, '').toLowerCase();
+    const resultDiv = document.getElementById('result');
+
+    if (!input) {
+        showResult('동네명을 입력해주세요.', 'error');
+        return;
+    }
+
+    let found = false;
+
+    for (const [region, areas] of Object.entries(regionData)) {
+        const areaList = areas.split(',').map(a => a.trim());
+
+        for (let area of areaList) {
+            let main = area;
+            let inner = '';
+
+            // 괄호 처리
+            if (area.includes('(') && area.includes(')')) {
+                main = area.substring(0, area.indexOf('(')).trim();
+                inner = area.substring(area.indexOf('(') + 1, area.indexOf(')')).trim();
             }
-            
-            let found = false;
-            
-            // Java 코드와 동일한 로직으로 검색
-            for (const [region, areas] of Object.entries(regionData)) {
-                const areaList = areas.split(',');
-                
-                for (let area of areaList) {
-                    area = area.trim();
-                    
-                    // 괄호가 있는 경우 처리
-                    if (area.includes('(') && area.includes(')')) {
-                        const main = area.substring(0, area.indexOf('(')).trim();
-                        const inner = area.substring(area.indexOf('(') + 1, area.indexOf(')')).trim();
-                        
-                        // @ 기호로 접두어 매칭
-                        if (inner.includes('@')) {
-                            const base = inner.replace('@', '');
-                            if (input.startsWith(base)) {
-                                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                                found = true;
-                                break;
-                            }
-                        }
-                        
-                        // 본문과 정확히 일치
-                        if (main === input) {
-                            showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                            found = true;
-                            break;
-                        }
-                        
-                    } else {
-                        // 괄호 없는 일반 처리
-                        if (area.includes('@')) {
-                            const base = area.replace('@', '');
-                            if (input.startsWith(base)) {
-                                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                                found = true;
-                                break;
-                            }
-                        } else {
-                            if (area === input) {
-                                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
+
+            // 소문자 변환 및 공백제거
+            const mainNorm = main.replace(/\s/g, '').toLowerCase();
+            const innerNorm = inner.replace(/\s/g, '').toLowerCase();
+
+            // '@' 처리
+            if (innerNorm.includes('@')) {
+                const base = innerNorm.replace('@', '');
+                if (input.includes(base)) {
+                    showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                    found = true;
+                    break;
                 }
-                
-                if (found) break;
             }
-            
-            if (!found) {
-                showResult('해당 구역을 찾을 수 없습니다.', 'error');
+
+            // 일반 매칭: 입력이 main 포함 혹은 main 포함 입력
+            if (mainNorm && (input === mainNorm || input.includes(mainNorm) || mainNorm.includes(input))) {
+                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                found = true;
+                break;
+            }
+
+            // 괄호 없는 일반 처리, '@'가 있으면 제외 (위에서 처리했으므로)
+            if (!inner && !innerNorm.includes('@')) {
+                if (area.replace(/\s/g, '').toLowerCase() === input) {
+                    showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                    found = true;
+                    break;
+                }
             }
         }
-        
-        function showResult(message, type) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.textContent = message;
-            resultDiv.className = `result ${type}`;
-            
-            // 애니메이션 효과
-            setTimeout(() => {
-                resultDiv.classList.add('show');
-            }, 100);
-        }
-        
-        // Enter 키로 검색 가능
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchRegion();
-            }
-        });
-    </script>
-</body>
-</html>
+        if (found) break;
+    }
+
+    if (!found) {
+        showResult('해당 구역을 찾을 수 없습니다.', 'error');
+    }
+}
+
+function showResult(message, type) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.textContent = message;
+    resultDiv.className = `result ${type}`;
+    setTimeout(() => {
+        resultDiv.classList.add('show');
+    }, 100);
+}
+
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchRegion();
+    }
+});
