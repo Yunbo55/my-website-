@@ -143,7 +143,7 @@
 
     <script>
         // Java 코드의 데이터를 JavaScript 객체로 변환
-       const regionData = {
+   const regionData = {
     "선화": "선화동,목동,중촌동,은행동 일부,중촌동",
     "대흥": "대흥1동,대흥2동,대흥3동 일부,대사동,부사동,문창동,석교동,중구청",
     "태평": "태평동,오류동,유천동 일부(현대@)",
@@ -155,7 +155,7 @@
     "갈마": "갈마동,월평동",
     "괴정": "괴정동,가장동,용문동,변동,내동",
     "내동": "괴정동,내동,롯데,경성큰마을,탄방동 일부,갈마동(12+70번지이상)",
-    "도마": "도마동,복수동,변동 ",
+    "도마": "도마동,복수동,변동",
     "관저": "가수원동,도안동,관저동,대자연,원앙,느리울",
     "판암": "원동,대동,판암동,용운동,신흥동,소제동 일부,인동 일부",
     "삼성": "삼성1동,삼성2동,중동,정동,원동,신안동,소제동 일부",
@@ -202,28 +202,45 @@ function searchRegion() {
                 inner = area.substring(area.indexOf('(') + 1, area.indexOf(')')).trim();
             }
 
-            // 소문자 변환 및 공백제거
             const mainNorm = main.replace(/\s/g, '').toLowerCase();
             const innerNorm = inner.replace(/\s/g, '').toLowerCase();
 
+            // 괄호 밖 main도 콤마 분리해서 각각 검사
+            const mainParts = main.split(',').map(s => s.trim().toLowerCase());
+
+            // 괄호 안도 콤마 분리
+            const innerParts = inner ? inner.split(',').map(s => s.trim().toLowerCase()) : [];
+
             // '@' 처리
-            if (innerNorm.includes('@')) {
-                const base = innerNorm.replace('@', '');
-                if (input.includes(base)) {
+            if (innerParts.some(part => part.includes('@'))) {
+                for (const part of innerParts) {
+                    const base = part.replace('@', '');
+                    if (input.includes(base)) {
+                        showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) break;
+            }
+
+            // 입력과 mainParts 비교
+            if (mainParts.some(part => part === input || input.includes(part) || part.includes(input))) {
+                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                found = true;
+                break;
+            }
+
+            // 입력과 innerParts 비교 (괄호 안에 @가 없는 경우)
+            if (!innerParts.some(part => part.includes('@'))) {
+                if (innerParts.some(part => part === input || input.includes(part) || part.includes(input))) {
                     showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
                     found = true;
                     break;
                 }
             }
 
-            // 일반 매칭: 입력이 main 포함 혹은 main 포함 입력
-            if (mainNorm && (input === mainNorm || input.includes(mainNorm) || mainNorm.includes(input))) {
-                showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                found = true;
-                break;
-            }
-
-            // 괄호 없는 일반 처리, '@'가 있으면 제외 (위에서 처리했으므로)
+            // 괄호 없는 일반 처리 (위에서 안걸리면)
             if (!inner && !innerNorm.includes('@')) {
                 if (area.replace(/\s/g, '').toLowerCase() === input) {
                     showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
