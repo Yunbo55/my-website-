@@ -182,7 +182,14 @@
                     const mainNorm = main.replace(/\s/g, '').toLowerCase();
                     const innerNorm = inner.replace(/\s/g, '').toLowerCase();
 
-                    // @ 포함된 inner 처리
+                    // 완전 일치 우선
+                    if (mainNorm === input) {
+                        showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
+                        found = true;
+                        break;
+                    }
+
+                    // 괄호 안 @ 처리
                     if (innerNorm.includes('@')) {
                         const base = innerNorm.replace('@', '');
                         if (input.includes(base)) {
@@ -192,20 +199,11 @@
                         }
                     }
 
-                    // main과 입력값 직접 비교 (포함, 일치)
-                    if (mainNorm && (input === mainNorm || input.includes(mainNorm) || mainNorm.includes(input))) {
+                    // 포함관계 검사
+                    if (input.includes(mainNorm) || mainNorm.includes(input)) {
                         showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
                         found = true;
                         break;
-                    }
-
-                    // 괄호 없는 일반 처리 (inner가 없고 '@'도 없으면)
-                    if (!inner && !innerNorm.includes('@')) {
-                        if (area.replace(/\s/g, '').toLowerCase() === input) {
-                            showResult(`▶ 해당 구역은 [${region}] 지국/지사에 속합니다.`, 'success');
-                            found = true;
-                            break;
-                        }
                     }
                 }
                 if (found) break;
@@ -233,3 +231,4 @@
     </script>
 </body>
 </html>
+
